@@ -9,6 +9,10 @@ const GameBoard = () => {
     }
   }
 
+  const getBoard = () => {
+    return board;
+  };
+
   const displayBoard = () => {
     console.log(board);
   };
@@ -18,7 +22,7 @@ const GameBoard = () => {
     board[row][col] = player.marker;
   };
 
-  return { displayBoard, placeMarker };
+  return { getBoard, displayBoard, placeMarker };
 };
 
 function Player(name, marker) {
@@ -39,9 +43,33 @@ function GameController() {
     activePlayer = activePlayer === players[0] ? players[1] : players[0];
   };
 
+  const checkWinConditions = () => {
+    // console.log(board.getBoard());
+    let currentBoard = board.getBoard();
+    let winnerFound =
+      currentBoard.some((row) =>
+        row.every((cell) => cell === activePlayer.marker)
+      ) ||
+      currentBoard.every((row) => row[0] === activePlayer.marker) ||
+      currentBoard.every((row) => row[1] === activePlayer.marker) ||
+      currentBoard.every((row) => row[2] === activePlayer.marker) ||
+      (currentBoard[0][0] === activePlayer.marker &&
+        currentBoard[1][1] === activePlayer.marker &&
+        currentBoard[2][2] === activePlayer.marker) ||
+      (currentBoard[2][0] === activePlayer.marker &&
+        currentBoard[1][1] === activePlayer.marker &&
+        currentBoard[0][2] === activePlayer.marker);
+    if (winnerFound) console.log(`${activePlayer.name} won!`);
+    if (currentBoard.every((row) => row.every(cell !== ".")))
+      console.log("It's a tie!");
+  };
+
   const playRound = (row, col) => {
-    console.log(`Placing ${activePlayer.marker} in position ${row}:${col}..`);
+    console.log(
+      `Placing ${activePlayer.marker} for ${activePlayer.name} in position ${row}:${col}..`
+    );
     board.placeMarker(row, col, activePlayer);
+    checkWinConditions();
     switchPlayer();
     printNewRound();
   };
@@ -49,6 +77,10 @@ function GameController() {
   printNewRound();
 
   return { playRound };
+}
+
+function ScreenController() {
+    
 }
 
 const game = GameController();
