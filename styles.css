@@ -1,0 +1,60 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  /* margin: 40px;
+  text-align: center; */
+  background-color: #ad5cff;
+}
+
+main {
+  margin-top: 5vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.game-board {
+  background-color: #d3d3d3;
+  width: 200px;
+  height: 200px;
+  padding: 12px;
+  margin-top: 12px;
+  border-radius: 12px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+}
+
+.x {
+  background-color: red;
+}
+
+.o {
+  background-color: blue;
+}
+
+button {
+  border: none;
+  border-radius: 12px;
+}
+
+.interface {
+  margin-top: 12px;
+  text-align: center;
+}
+
+.interface-button {
+  margin-top: 12px;
+  padding: 8px 12px;
+}
+
+button:hover {
+  background-color: #9b9b9b;
+}
+
+.hidden {
+  display: none;
+}

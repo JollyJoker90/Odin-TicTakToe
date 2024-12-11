@@ -35,6 +35,10 @@ function GameController() {
 
   let activePlayer = players[0];
 
+  const getActivePlayer = () => {
+    return activePlayer;
+  };
+
   const printNewRound = () => {
     board.displayBoard();
   };
@@ -59,9 +63,11 @@ function GameController() {
       (currentBoard[2][0] === activePlayer.marker &&
         currentBoard[1][1] === activePlayer.marker &&
         currentBoard[0][2] === activePlayer.marker);
-    if (winnerFound) console.log(`${activePlayer.name} won!`);
-    if (currentBoard.every((row) => row.every(cell !== ".")))
+    if (winnerFound) {
+      console.log(`${activePlayer.name} won!`);
+    } else if (currentBoard.every((row) => row.every((cell) => cell !== "."))) {
       console.log("It's a tie!");
+    }
   };
 
   const playRound = (row, col) => {
@@ -71,16 +77,60 @@ function GameController() {
     board.placeMarker(row, col, activePlayer);
     checkWinConditions();
     switchPlayer();
-    printNewRound();
+    // printNewRound();
   };
   console.log(`Playing Tic Tak Toe\n${activePlayer.name} begins..`);
   printNewRound();
 
-  return { playRound };
+  return { playRound, getBoard: board.getBoard, getActivePlayer };
 }
 
 function ScreenController() {
-    
+  const game = GameController();
+  const boardDiv = document.querySelector(".game-board");
+
+  const handleInterfaceInput = (e) => {
+    if (boardDiv.classList.contains("hidden")) {
+      boardDiv.classList.remove("hidden");
+      e.target.textContent = "Restart";
+    } else {
+      // restart game
+    }
+  };
+
+  document
+    .querySelector(".interface-button")
+    .addEventListener("click", handleInterfaceInput);
+
+  const updateScreen = () => {
+    // boardDiv.innerHTML = "";
+    const board = game.getBoard();
+
+    board.forEach((row, indexRow) => {
+      row.forEach((cell, indexCol) => {
+        let cellButton = document.querySelector(
+          `.game-board button[data-row="${indexRow}"][data-col="${indexCol}"]`
+        );
+        if (!cellButton) {
+          cellButton = document.createElement("button");
+          cellButton.setAttribute("data-row", indexRow);
+          cellButton.setAttribute("data-col", indexCol);
+          cellButton.addEventListener("click", () => {
+            const currentPlayer = game.getActivePlayer();
+            game.playRound(indexRow, indexCol);
+            cellButton.classList.add(currentPlayer.marker);
+            cellButton.disabled = true;
+            updateScreen();
+          });
+          boardDiv.append(cellButton);
+        }
+        cellButton.textContent = cell;
+      });
+    });
+  };
+
+  updateScreen();
 }
 
-const game = GameController();
+// const game = GameController();
+ScreenController();
